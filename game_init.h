@@ -1,10 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/* 
+/*
  * File:   newfile.h
  * Author: lpasqua
  *
@@ -26,11 +21,11 @@ enum color {
     RED, BLU, GREEN, YELLOW, PINK, ORANGE
 };
 
-//defines a token. 
+//defines a token.
 //Note each token can be associated with a color
 typedef struct token{
-   enum color col; 
-    
+   enum color col;
+
 }token;
 
 //Defines a square of the board.
@@ -38,7 +33,7 @@ typedef struct square{
     //A square can be a NORMAL or an OBSTACLE square
      enum stype type;
      //the stack of tokens that can be placed on the board square
-     token * stack;      
+     token * stack;
 }square;
 
 
@@ -49,14 +44,14 @@ typedef struct square{
  * such as a name and a color.
  */
 typedef struct player{
-    
-    
-}player; 
+    char name;
+
+}player;
 
 
 /*
  * This function creates the board for the first time
- * 
+ *
  * Input: board - a 6x9 array of squares
  *
  */
@@ -64,12 +59,9 @@ void initialize_board(square board[NUM_ROWS][NUM_COLUMNS]);
 
 /*
  * This function creates players for the first time
- * 
+ *
  * Input: the array of players to be initialized
  * Output: The number of players of the game
  *
  */
 int initialize_players(player players[]);
-
-
-
