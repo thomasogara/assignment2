@@ -1,4 +1,11 @@
 /*
+ * Prints a horizontal line of hyphen "-" characters
+ * Input: void
+ */
+void printLine(void);
+
+
+/*
  * Prints the board
  *
  * Input: the board to be printed.

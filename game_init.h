@@ -1,3 +1,8 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 
 /*
  * File:   newfile.h
@@ -14,7 +19,8 @@
 
 //types of squares
 enum stype{
-    NORMAL, OBSTACLE };
+    NORMAL, OBSTACLE
+};
 
 //colors of tokens
 enum color {
@@ -44,7 +50,7 @@ typedef struct square{
  * such as a name and a color.
  */
 typedef struct player{
-    char name;
+
 
 }player;
 
