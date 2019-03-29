@@ -1,15 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/*
- * File:   newfile.h
- * Author: lpasqua
- *
- * Created on 06 March 2019, 12:18
- */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 //number of rows of the board
 #define NUM_ROWS 6
@@ -31,7 +23,6 @@ enum color {
 //Note each token can be associated with a color
 typedef struct token{
    enum color col;
-
 }token;
 
 //Defines a square of the board.
@@ -39,10 +30,8 @@ typedef struct square{
     //A square can be a NORMAL or an OBSTACLE square
      enum stype type;
      //the stack of tokens that can be placed on the board square
-     token * stack;
+     token *stack;
 }square;
-
-
 
 /*
  * You need to fill this data structure
@@ -50,8 +39,10 @@ typedef struct square{
  * such as a name and a color.
  */
 typedef struct player{
-
-
+    //a player must be represented by a color
+    enum color col;
+    //a player must have a name
+    char name[80];
 }player;
 
 
