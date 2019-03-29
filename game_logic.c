@@ -1,6 +1,5 @@
 #include "game_init.h"
 #include "game_logic.h"
-#include <stdio.h>
 
 /*
  * Returns the first letter associated with the color of the token
@@ -72,8 +71,7 @@ void printLine(void){
  *        numPlayers - the number of players
  */
 void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers){
-    // TO BE IMPLEMENTED
-
+    /*TO BE IMPLEMENTED*/
 }
 
 

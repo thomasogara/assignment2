@@ -47,11 +47,9 @@ int initialize_players(player players[]){
         //confirm that the user has not stopped entering player names
         if(name[0] == '\n'){
             if(i >= 2){
-                printf("here %d", __LINE__);
                 return i;
             }
             else{
-                printf("here %d", __LINE__);
                 return 0;
             }
         }
@@ -65,7 +63,7 @@ int initialize_players(player players[]){
         while(getchar() != '\n');
 
         //check that the value given for the user colour is correct
-        while(col > 5){
+        while(col > 5 || col < 0){
             printf("This is not a valid colour\nPlease try again\n");
             printf("What is the color of this player\n");
             printf("0 = RED, 1 = BLU, 2 = GREEN, 3 = YELLOW, 4 = PINK, 5 = ORANGE\n");
