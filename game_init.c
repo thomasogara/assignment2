@@ -42,7 +42,7 @@ int initialize_players(player players[]){
         //ask for user input
         printf("What is the name of player %d\n?:", i + 1);
         fgets(name, 79, stdin);
-        name[80] = '\0';
+        //name[80] = '\0';
 
         //confirm that the user has not stopped entering player names
         if(name[0] == '\n'){
@@ -78,10 +78,4 @@ int initialize_players(player players[]){
         strcpy(players[i].name, name);
         players[i].col = col;
 
-    }
-    if(i >= 2){
-        return i;
-    }else{
-        return 0;
-    }
 }
