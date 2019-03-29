@@ -1,12 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 #include "game_init.h"
 #include "game_logic.h"
-#include <stdio.h>
 
 /*
  * Returns the first letter associated with the color of the token
@@ -16,12 +9,12 @@
  */
 
 char print_token(token *t){
-    if((*t).col== PINK) return 'P';
-    if((*t).col== RED) return 'R';
-    if((*t).col== BLU) return 'B';
-    if((*t).col== GREEN) return 'G';
-    if((*t).col== ORANGE) return 'O';
-    if((*t).col== YELLOW) return 'Y';
+    if(t -> col == PINK) return 'P';
+    if(t ->col == RED) return 'R';
+    if(t -> col == BLU) return 'B';
+    if(t -> col == GREEN) return 'G';
+    if(t -> col == ORANGE) return 'O';
+    if(t -> col == YELLOW) return 'Y';
     return '\0';
 }
 
@@ -78,8 +71,7 @@ void printLine(void){
  *        numPlayers - the number of players
  */
 void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers){
-    // TO BE IMPLEMENTED
-
+    /*TO BE IMPLEMENTED*/
 }
 
 
