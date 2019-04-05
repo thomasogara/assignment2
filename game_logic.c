@@ -71,7 +71,52 @@ void printLine(void){
  *        numPlayers - the number of players
  */
 void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers){
-    /*TO BE IMPLEMENTED*/
+// the min number of tokens placed on a square in the first coloumn of the board
+    int minNumOfTokens = 0;
+    int selectedSquare = 0;
+
+    srand(time(NULL));
+
+    for(int i=0; i <4; i++){
+
+        for(int j=0; j <numPlayers; j++){
+
+            printf("Player %d roll a dice.\n", j);
+
+            selectedSquare = rand()%6;
+
+            printf("You rolled a %d.\n", selectedSquare);
+       
+
+            while(square ){
+                int x=1; // counter to iterate through each row within first column
+
+               if(square board[selectedSquare][1] == NULL)
+               {
+                printf("FULL\n");
+               }
+                
+                break;
+            }
+          
+
+            // to be implemented: if the square contains the min number of tokens and
+            // does not have a token of the same colour of the player
+
+            board[selectedSquare][0].stack = (token *)malloc(sizeof(token));
+            board[selectedSquare][0].stack->col = players[j].col;
+            board[selectedSquare][0].numTokens++;
+
+            // updates the minimum number of Tokens
+            if(((numPlayers * i) + j + 1)%NUM_ROWS ==0)
+                minNumOfTokens++;
+
+            print_board(board); // prints board after each token is placed
+        }        
+    }
+
+
+
 }
 
 

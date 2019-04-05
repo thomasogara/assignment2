@@ -78,4 +78,5 @@ int initialize_players(player players[]){
         strcpy(players[i].name, name);
         players[i].col = col;
 
+} 
 }
