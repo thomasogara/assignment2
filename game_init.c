@@ -77,6 +77,11 @@ int initialize_players(player players[]){
         //append them to the array as a ney player
         strcpy(players[i].name, name);
         players[i].col = col;
+<<<<<<< HEAD
 
 } 
+=======
+    }
+    return i;
+>>>>>>> 9eb363ad38a792e6f7ce8ebc39a9ca7e1bb76258
 }
