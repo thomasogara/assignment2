@@ -71,30 +71,7 @@ void printLine(void){
  *        numPlayers - the number of players
  */
 void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers){
-    //counter variables
-    int i = 0;
-    int j = 0;
-    //variable to store the result of the dice roll
-    int randNumber;
-    for(i = 0; i < 4; i++){
-        for(j = 0; j < numPlayers; j++){
-            //ask for user input
-            printf("Player %d please roll the dice\n", j);
-            //halt execution until a newline character is entered
-            while(getchar()!='\n');
-            //virtual dice roll
-            randNumber = rand()%6;
-            //inform the user of their result
-            printf("You rolled a %d\n", randNumber);
-            //allocate memory for the stack
-            board[randNumber][0].stack = (token*)malloc(sizeof(token));
-            //set the top value of the stack to the current player's colour
-            board[randNumber][0].stack->col = players[j].col;
-            //print the updated board
-            print_board(board);
-            if((numPlayers * i) + j + 1)%NUM_ROWS
-        }
-    }
+    /*TO BE IMPLEMENTED*/
 }
 
 
