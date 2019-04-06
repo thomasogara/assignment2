@@ -71,11 +71,11 @@ void printLine(void){
  *        numPlayers - the number of players
  */
 void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers){
+    return;
+    /*
 // the min number of tokens placed on a square in the first coloumn of the board
     int minNumOfTokens = 0;
     int selectedSquare = 0;
-
-    srand(time(NULL));
 
     for(int i=0; i <4; i++){
 
@@ -86,7 +86,7 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
             selectedSquare = rand()%6;
 
             printf("You rolled a %d.\n", selectedSquare);
-       
+
 
             while(square ){
                 int x=1; // counter to iterate through each row within first column
@@ -95,10 +95,10 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
                {
                 printf("FULL\n");
                }
-                
+
                 break;
             }
-          
+
 
             // to be implemented: if the square contains the min number of tokens and
             // does not have a token of the same colour of the player
@@ -112,10 +112,10 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
                 minNumOfTokens++;
 
             print_board(board); // prints board after each token is placed
-        }        
+        }
     }
 
-
+    */
 
 }
 
@@ -129,5 +129,16 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
  */
 
 void play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers){
-    //TO BE IMPLEMENTED
+    srand(time(NULL));
+    int i = 0;
+    int diceRoll = 0;
+    while(players[(i-1) % numPlayers].numTokensLastCol != 3){
+        printf("It is your turn to play %s", players[i].name);
+        puts("Please roll the dice by pressing enter");
+        while(getchar()!='\n');
+        diceRoll = rand()%6;
+        printf("You must move a token from row %d\r\n\r\n", diceRoll);
+        ++i;
+        i %= numPlayers;
+    }
 }
