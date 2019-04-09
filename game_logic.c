@@ -81,37 +81,40 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
 
         for(int j=0; j <numPlayers; j++){
 
-            printf("Player %d roll a dice.\n", j);
+            print_board(board); // prints board
 
-            selectedSquare = rand()%6;
+            printf("Player %d select a square.\n", j+1);
+            scanf("%d", &selectedSquare); // user selects square in first coloumn
 
-            printf("You rolled a %d.\n", selectedSquare);
+            if(selectedSquare > -1 && selectedSquare < 6){ // ensures player selects a square between 0 and 5
 
+                if(board[selectedSquare][0].stack == NULL) // if selected square is empty
+                {
+                   board[selectedSquare][0].stack = (token *)malloc(sizeof(token)); // allocates memory
+                   board[selectedSquare][0].stack->col = players[j].col;
+                   board[selectedSquare][0].numTokens++;
+                }
+                else
+                {
+                    printf("This square is full.\nPlease select an empty square.\n"); // error messaage
 
-            while(square ){
-                int x=1; // counter to iterate through each row within first column
+                }
 
-               if(square board[selectedSquare][1] == NULL)
-               {
-                printf("FULL\n");
-               }
-
-                break;
+            }
+            else{
+                printf("\n\nPlease select a square between 0-5.\n"); // error message if user selects square outside of range
             }
 
 
             // to be implemented: if the square contains the min number of tokens and
             // does not have a token of the same colour of the player
 
-            board[selectedSquare][0].stack = (token *)malloc(sizeof(token));
-            board[selectedSquare][0].stack->col = players[j].col;
-            board[selectedSquare][0].numTokens++;
 
             // updates the minimum number of Tokens
             if(((numPlayers * i) + j + 1)%NUM_ROWS ==0)
                 minNumOfTokens++;
 
-            print_board(board); // prints board after each token is placed
+            //print_board(board); // prints board after each token is placed
         }
     }
 
