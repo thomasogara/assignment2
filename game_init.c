@@ -20,6 +20,7 @@ void initialize_board(square board[NUM_ROWS][NUM_COLUMNS]){
                 board[i][j].type = NORMAL;
             }
             board[i][j].stack = NULL;
+            board[i][j].numTokens = 0;
         }
     }
 }
