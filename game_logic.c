@@ -307,3 +307,4 @@ int moveToken(square board[NUM_ROWS][NUM_COLUMNS], int srcRow, int srcCol, int d
     }
     return 1;//indicate that function succeeded
 }
+}
