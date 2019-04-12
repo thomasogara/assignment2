@@ -8,7 +8,6 @@
 //number of columns of the board
 #define NUM_COLUMNS 9
 
-
 //types of squares
 enum stype{
     NORMAL, OBSTACLE

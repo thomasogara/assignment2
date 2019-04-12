@@ -1,6 +1,8 @@
 #include "game_init.h"
 #include "game_logic.h"
 
+enum DIR {UP, DOWN}
+
 /*
  * Returns the first letter associated with the color of the token
  *
@@ -117,18 +119,18 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
                 }
 
             }
-          
+
 
             // to be implemented: if the square contains the min number of tokens and
             // does not have a token of the same colour of the player
-               
+
 
             // updates the minimum number of Tokens
             if(((numPlayers * i) + j + 1)%NUM_ROWS ==0)
                 minNumOfTokens++;
 
             //print_board(board); // prints board after each token is placed
-        }        
+        }
     }
 
 
