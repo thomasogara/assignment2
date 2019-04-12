@@ -96,11 +96,26 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
                 {
                     printf("This square is full.\nPlease select an empty square.\n"); // error messaage
 
+                    board[selectedSquare][0].stack = (token *)malloc(sizeof(token)); // allocates memory
+                    board[selectedSquare][0].stack->col = players[j].col;
+                    board[selectedSquare][0].numTokens++;
+
                 }
 
             }
-            else{
+            else
+            {
                 printf("\n\nPlease select a square between 0-5.\n"); // error message if user selects square outside of range
+                printf("Player %d select a square.\n", j+1);
+                scanf("%d", &selectedSquare); // user selects square in first coloumn
+
+                if(board[selectedSquare][0].stack == NULL) // if selected square is empty
+                {
+                   board[selectedSquare][0].stack = (token *)malloc(sizeof(token)); // allocates memory
+                   board[selectedSquare][0].stack->col = players[j].col;
+                   board[selectedSquare][0].numTokens++;
+                }
+
             }
           
 
