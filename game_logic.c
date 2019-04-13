@@ -193,7 +193,7 @@ void play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPla
             scanf("%d", &row);//scan in row index
             scanf("%d", &column);//scan in column index
             //ensure that this token belongs to the user and is not in an obstacle square
-            while(board[row][column].stack->col != players[userIndex].col || board[row][column].type == OBSTACLE){
+            while(board[row][column].stack == NULL || board[row][column].stack->col != players[userIndex].col || board[row][column].type == OBSTACLE){
                 puts("That square cannot be selected, please choose another");//error message
                 puts("Please input the row and column number of the token you would like to move");//request user input
                 scanf("%d", &row);//scan in user input
