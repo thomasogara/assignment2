@@ -24,6 +24,11 @@ int main(int argc, char** argv){
     //creates the players
     numPlayers = initialize_players(players);
 
+    if(numPlayers == 0){
+        printf("Not enough players entered\n");
+        return -1;
+    }
+
     //asks each player to place their tokens
     //on the first column of the board
     place_tokens(board, players, numPlayers);
