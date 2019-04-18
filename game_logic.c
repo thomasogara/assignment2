@@ -1,7 +1,7 @@
 #include "game_init.h"
 #include "game_logic.h"
 
-enum DIR {UP, DOWN};
+enum DIR {DOWN, UP};
 
 /*
  * Returns the first letter associated with the color of the token
@@ -92,6 +92,7 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
                 {
                    board[selectedSquare][0].stack = (token *)malloc(sizeof(token)); // allocates memory
                    board[selectedSquare][0].stack->col = players[j].col;
+                   board[selectedSquare][0].stack->next = NULL;
                    board[selectedSquare][0].numTokens++;
                 }
                 else
@@ -100,6 +101,7 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
 
                     board[selectedSquare][0].stack = (token *)malloc(sizeof(token)); // allocates memory
                     board[selectedSquare][0].stack->col = players[j].col;
+                    board[selectedSquare][0].stack->next = NULL;
                     board[selectedSquare][0].numTokens++;
 
                 }
@@ -115,6 +117,7 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
                 {
                    board[selectedSquare][0].stack = (token *)malloc(sizeof(token)); // allocates memory
                    board[selectedSquare][0].stack->col = players[j].col;
+                   board[selectedSquare][0].stack->next = NULL;
                    board[selectedSquare][0].numTokens++;
                 }
 
@@ -146,7 +149,10 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
  *        numPlayers - the number of players
  */
 
-void play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers){
+int play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers){
+    /*
+        TODO: compartmentalise input validation
+    */
     srand(time(NULL));//seed the random() function
 
     //a number of counter variables
@@ -192,7 +198,7 @@ void play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPla
             //scan in user input
             scanf("%d", &row);//scan in row index
             scanf("%d", &column);//scan in column index
-            //ensure that this token belongs to the user and is not in an obstacle square
+            //ensure that this token belongs to the user and is not in an obstacle square nor an empty square
             while(board[row][column].stack == NULL || board[row][column].stack->col != players[userIndex].col || board[row][column].type == OBSTACLE){
                 puts("That square cannot be selected, please choose another");//error message
                 puts("Please input the row and column number of the token you would like to move");//request user input
@@ -249,26 +255,33 @@ void play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPla
         j = 0;//reset counter variable j
         k = 0;//reset counter variable k
         impassable = 0;//reset bool variable impassable
+
         //iterate over all squares behind this obstacle square, if any are non-empty
         //then this square cannot be passed. also confim selected square is not empty
-
         while(board[diceRoll][column].type == OBSTACLE && board[diceRoll][column].stack != NULL){
-            //iterate over all rows
-            for(j = 0; j < NUM_ROWS; j++){
-                //if this square cannot be passed, exit loop
-                if(impassable){
-                    break;
-                }
-                //iterate over all aquares of the row left of the current column
-                for(k = 0; k < column; k++){
-                    //if the square is non-empty, this obstacles square cannot be passed
-                    if(board[j][k].stack != NULL){
-                        impassable = 1;
+            //reset impassable variable indicating if an obstacle square can be passed
+            impassable = 0;
+
+            //if the square is an obstacle square, iterate over all squares behind this square
+            //and if anyone of them are non-empty, set impassable to 1, indicating that this
+            //obstacle square cannot yet be passed
+            if(board[diceRoll][column].type == OBSTACLE){
+                for(j = 0; j < NUM_ROWS; j++){
+                    //if this square cannot be passed, exit loop
+                    if(impassable){
                         break;
+                    }
+                    //iterate over all squares of the row behind the current column
+                    for(k = 0; k < column; k++){
+                        //if the square is non-empty, this obstacles square cannot be passed
+                        if(board[j][k].stack != NULL){
+                            impassable = 1;
+                            break;
+                        }
                     }
                 }
             }
-            //if impassable, continue program flow
+            //if this square can be passed, continue program flow
             if(!impassable){
                 break;
             }
@@ -277,8 +290,9 @@ void play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPla
                 puts("This obstacle square cannot yet be passed");//error message
                 puts("Please enter the column number of the token you would like to move");//request user input
                 scanf("%d", &column);//scan user input
+                //check that the user has not selected an empty square
                 while(board[diceRoll][column].stack == NULL){
-                    puts("This column number is invalid, please try again");
+                    puts("This square is empty and cannot be chosen, please choose another");
                     puts("Please enter the column number of the token you would like to move");//request user input
                     scanf("%d", &column);//scan in user input
                 }
@@ -289,7 +303,10 @@ void play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPla
         //if the function fails, print error message and return to main()
         if(!moveToken(board, diceRoll, column, diceRoll, column+1)){
             puts("Error, insufficient memory\n");
-            return;
+            return -1;
+        }
+        if(column == 8){
+            players[userIndex].numTokensLastCol++;
         }
         //print the board after the token has been moved
         print_board(board);
@@ -299,28 +316,44 @@ void play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPla
         //the bounds of the players[] array (of length numPlayers)
         userIndex %= numPlayers;
     }
+    return userIndex-1;
 }
 
 int moveToken(square board[NUM_ROWS][NUM_COLUMNS], int srcRow, int srcCol, int destRow, int destCol){
-    //if the destination square is empty, allocate memory for the token
-    if(board[destRow][destCol].stack == NULL){
-        //if no memory available for allocation, return error
-        if((board[destRow][destCol].stack = (token*)malloc(sizeof(token))) == NULL){
-            puts("Error, insufficient memory");//error message
-            return 0;//indicate that function failed
-        }
-    }
-    //move token from source to destination
-    board[destRow][destCol].stack->col = board[srcRow][srcCol].stack->col;
+    printf("Line = %d\n", __LINE__);
+    printf("srcRow = %d\tsrcCol = %d\tboard[srcRow][srcCol] = %p\ndestRow = %d\t destCol = %d\tboard[destRow][destCol] = %p\n", srcRow, srcCol, board[srcRow][srcCol].stack, destRow, destCol, board[destRow][destCol].stack);
+    token *temp;
+    temp = pop(&board[srcRow][srcCol].stack);
+    push(&board[destRow][destCol].stack, temp);
     //increment number of tokens at destination
     board[destRow][destCol].numTokens++;
     //decrement number of token as source
     board[srcRow][srcCol].numTokens--;
     //if the source square is now empty, free allocated memory
-    printf("%d\t%d\n", board[srcRow][srcCol].numTokens, board[destRow][destCol].numTokens);
+    printf("[%d][%d] = %d\t[%d][%d] = %d\n", srcRow, srcCol, board[srcRow][srcCol].numTokens, destRow, destCol, board[destRow][destCol].numTokens);
     if(board[srcRow][srcCol].numTokens == 0){
-        free(board[srcRow][srcCol].stack);//free memory allocated to source stack
         board[srcRow][srcCol].stack = NULL;//set source stack pointer to NULL
+        printf("Line = %d\n", __LINE__);
+        printf("srcRow = %d\tsrcCol = %d\tboard[srcRow][srcCol] = %p\ndestRow = %d\t destCol = %d\tboard[destRow][destCol] = %p\n", srcRow, srcCol, board[srcRow][srcCol].stack, destRow, destCol, board[destRow][destCol].stack);
     }
-    return 1;//indicate that function succeeded
+    return 1;
+}
+token* pop(token **stack){
+    if(stack != NULL){
+        token *temp = (token*)malloc(sizeof(token));
+        temp = *stack;
+        *stack = (*stack)->next;
+        return temp;
+    }
+    return NULL;
+}
+
+void push(token **stack, token *insert){
+    if (insert != NULL){
+        insert->next = *stack;
+        *stack = insert;
+    }
+    else {
+        puts("Token must exist if it is to be moved onto the stack");
+    }
 }

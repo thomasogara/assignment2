@@ -31,7 +31,7 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
  *        players - the array of the players
  *        numPlayers - the number of players
  */
-void play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers);
+int play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers);
 
 /*
 *   Allows a token to be moved from one square to another
@@ -41,3 +41,7 @@ void play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPla
 *         destRow, destCol - the index of the square to which the token is to be moved
 */
 int moveToken(square board[NUM_ROWS][NUM_COLUMNS], int srcRow, int srcCol, int destRow, int destCol);
+
+token* pop(token **stack);
+
+void push(token **stack, token *insert);
