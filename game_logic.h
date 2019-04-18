@@ -1,3 +1,6 @@
+//an enumerated type used to indicate whether the use is moving a token up or down
+enum DIR {DOWN, UP};
+
 /*
  * Prints a horizontal line of hyphen "-" characters
  * Input: void
@@ -31,7 +34,7 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
  *        players - the array of the players
  *        numPlayers - the number of players
  */
-void play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers);
+int play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers);
 
 /*
 *   Allows a token to be moved from one square to another
@@ -40,4 +43,30 @@ void play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPla
 *         srcRow, srcCol - the index of the square from which the token is to be moved
 *         destRow, destCol - the index of the square to which the token is to be moved
 */
-int moveToken(square board[NUM_ROWS][NUM_COLUMNS], int srcRow, int srcCol, int destRow, int destCol);
+void moveToken(square board[NUM_ROWS][NUM_COLUMNS], int srcRow, int srcCol, int destRow, int destCol);
+
+/*
+*   Pop a token from the top of the stack, and return a pointer to this token
+*
+*   input:
+*   token **stack - a pointer to a pointer to a stack of tokens, which the top
+*                   token will be removed from
+*
+*   output:
+*   token* - a pointer to the token that was removed from the stack
+*/
+token* pop(token **stack);
+
+
+/*
+*   Push a token to the top of a stack of token
+*
+*   input:
+*   token **stack - a pointer to a pointer to a stack of tokens, which the top
+*                   token will be removed from
+*   token *insert - the token to be pushed to the stack
+*
+*   output:
+*   void
+*/
+void push(token **stack, token *insert);
