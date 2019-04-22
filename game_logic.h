@@ -70,3 +70,26 @@ token* pop(token **stack);
 *   void
 */
 void push(token **stack, token *insert);
+
+/*
+*   count the number of non-empty squares in a row, excluding the last column
+*
+*   input: board - a 6x9 array of squares that represents the board
+*          row - the row in which the number of non-empty squares are to be counted
+*
+*   output: the number of non-empty squares in the row, excluding column 8
+*/
+int nonEmptySquaresInRow(square board[NUM_ROWS][NUM_COLUMNS], int row);
+
+/*
+*   check if an obstacle square can be passed
+*
+*   input: board - a 6x9 array of squares that represents the board
+*          row - the row number of the obstacle square in question
+*          col - the column number of the obstacle square in question
+*
+*  output: 0 - obstacle square cannot be passed
+*          1 - obstacle square can be passed
+*
+*/
+int isPassable(square board[NUM_ROWS][NUM_COLUMNS], int row, int col);

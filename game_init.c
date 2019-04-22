@@ -122,7 +122,7 @@ int initialize_players(player players[]){
         players[i].col = col;
 
         //confirmation message
-        printf("\nPlayer %d successfully created with color %s and name %s\n", i, colorNames[players[i].col], players[i].name);
+        printf("\nPlayer %d successfully created with colour %s and name %s\n", i+1, colorNames[players[i].col], players[i].name);
     }
     return i;
 }
