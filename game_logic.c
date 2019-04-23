@@ -77,45 +77,37 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
     int num_available_tokens = 0;
     token *temp = NULL;
 
+    printf("\nThe current board:\n");
+    print_board(board); // prints board at start of place_tokens sequence
+
     for(int i=0; i < 4; i++){
 
         for(int j=0; j <numPlayers; j++){
 
-            printf("\nThe current board:\n");
-            print_board(board); // prints board
-
             printf("Please select a square in the first column %s", players[j].name);
             scanf("%d", &selectedSquare); // user selects square in first coloumn
-            printf("min %d\n", board[selectedSquare][0].numTokens > minNumOfTokens);
-            printf("stack %d\n",  board[selectedSquare][0].stack != NULL);
-            if(board[selectedSquare][0].stack != NULL)
-                printf("col %d\n", board[selectedSquare][0].stack->col == players[j].col);
-            printf("-1 %d\n", selectedSquare < -1);
-            printf("6 %d\n", selectedSquare > 6);
 
-            printf("%d\n", __LINE__);
-            while(board[selectedSquare][0].numTokens > minNumOfTokens || selectedSquare < -1 || selectedSquare > 6 || board[selectedSquare][0].stack != NULL && board[selectedSquare][0].stack->col == players[j].col )
+            while(board[selectedSquare][0].numTokens > minNumOfTokens || selectedSquare < -1 || selectedSquare > 6 || (board[selectedSquare][0].stack != NULL && board[selectedSquare][0].stack->col == players[j].col) )
             {
-                printf("min %d\n", board[selectedSquare][0].numTokens > minNumOfTokens);
-                printf("stack %d\n",  board[selectedSquare][0].stack != NULL);
-                if(board[selectedSquare][0].stack != NULL)
-                    printf("col %d\n", board[selectedSquare][0].stack->col == players[j].col);
-                printf("-1 %d\n", selectedSquare < -1);
-                printf("6 %d\n", selectedSquare > 6);
-                printf("\nThis choice is not available.\n" );
+                printf("\nThis square is not available because:\n");
+                if(board[selectedSquare][0].numTokens > minNumOfTokens){
+                    printf("The stack is too high relative to the other squares.\n\n");
+                }
+                else if(selectedSquare < -1 || selectedSquare > 6){
+                    printf("You have chosen a value outside of the possible range.\n");
+                    printf("You must select a square between 0-5.\n\n");
+                }
+                else{
+                    printf("The top token on this stack is your own token.\n\n");
+                }
                 printf("Please select another square\n");
                 scanf("%d", &selectedSquare); // takes input from user again
             } // close outer while loop
 
-            printf("%d\n", __LINE__);
             temp = (token *)malloc(sizeof(token)); // allocates memory
-            printf("%d\n", __LINE__);
-            temp->col = players[j].col;
-            printf("%d\n", __LINE__);
-            push(&board[selectedSquare][0].stack, temp);
-            printf("%d\n", __LINE__);
-            board[selectedSquare][0].numTokens++;
-            printf("%d\n", __LINE__);
+            temp->col = players[j].col;//assign color of current player to the allocated token
+            push(&board[selectedSquare][0].stack, temp);//push the allocated token to the stack of the selected square
+            board[selectedSquare][0].numTokens++;//incrememnt the number of tokens on the selected square
 
             // to be implemented: if the square contains the min number of tokens and
             // does not have a token of the same colour of the player
@@ -126,8 +118,8 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
                 minNumOfTokens++;
 
             num_available_tokens = 0; // resets counter for next iteration
-
-
+            printf("\nThe current board:\n");
+            print_board(board); // prints board after token has been placed
         }
     }
 
