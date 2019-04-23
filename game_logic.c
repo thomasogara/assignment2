@@ -94,13 +94,8 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
             printf("6 %d\n", selectedSquare > 6);
 
             printf("%d\n", __LINE__);
-            while(board[selectedSquare][0].numTokens > minNumOfTokens || selectedSquare < -1 || selectedSquare > 6)
+            while(board[selectedSquare][0].numTokens > minNumOfTokens || selectedSquare < -1 || selectedSquare > 6 || board[selectedSquare][0].stack != NULL && board[selectedSquare][0].stack->col == players[j].col )
             {
-                if(board[selectedSquare][0].stack != NULL){
-                    if(board[selectedSquare][0].stack->col == players[j].col){
-                        continue;
-                    }
-                }
                 printf("min %d\n", board[selectedSquare][0].numTokens > minNumOfTokens);
                 printf("stack %d\n",  board[selectedSquare][0].stack != NULL);
                 if(board[selectedSquare][0].stack != NULL)
@@ -127,7 +122,7 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
 
 
             // updates the minimum number of Tokens
-            if(((numPlayers * i) + j)%NUM_ROWS ==0)
+            if(((numPlayers * i) + j + 1)%NUM_ROWS ==0)
                 minNumOfTokens++;
 
             num_available_tokens = 0; // resets counter for next iteration
