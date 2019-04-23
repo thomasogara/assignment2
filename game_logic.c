@@ -74,65 +74,42 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
 // the min number of tokens placed on a square in the first coloumn of the board
     int minNumOfTokens = 0;
     int selectedSquare = 0;
-
-    for(int i=0; i <4; i++){
+    int num_available_tokens = 0;
+    token* temp = NULL;
+   
+    for(int i=0; i < 4; i++){
 
         for(int j=0; j <numPlayers; j++){
 
             printf("\nThe current board:\n");
             print_board(board); // prints board
 
-            printf("Please select a square in the first coloumn %s", players[i].name);
+            printf("Please select a square in the first column %s", players[j].name);
             scanf("%d", &selectedSquare); // user selects square in first coloumn
 
-            if(selectedSquare > -1 && selectedSquare < 6){ // ensures player selects a square between 0 and 5
-
-                if(board[selectedSquare][0].stack == NULL) // if selected square is empty
-                {
-                   board[selectedSquare][0].stack = (token *)malloc(sizeof(token)); // allocates memory
-                   board[selectedSquare][0].stack->col = players[j].col;
-                   board[selectedSquare][0].stack->next = NULL;
-                   board[selectedSquare][0].numTokens++;
-                }
-                else
-                {
-                    printf("This square is full.\nPlease select an empty square.\n"); // error messaage
-
-                    board[selectedSquare][0].stack = (token *)malloc(sizeof(token)); // allocates memory
-                    board[selectedSquare][0].stack->col = players[j].col;
-                    board[selectedSquare][0].stack->next = NULL;
-                    board[selectedSquare][0].numTokens++;
-
-                }
-
-            }
-            else
+            while(board[selectedSquare][0].numTokens >= minNumOfTokens || board[selectedSquare][0].stack != NULL || board[selectedSquare][0].stack->col == players[j].col || selectedSquare < -1 || selectedSquare > 6)
             {
-                printf("\n\nYou have selected a square outside the given range\n");
-                printf("Please select a square between 0-5.\n"); // error message if user selects square outside of range
-                printf("Please select a square %s.\n", players[i].name);
-                scanf("%d", &selectedSquare); // user selects square in first coloumn
-
-                if(board[selectedSquare][0].stack == NULL) // if selected square is empty
-                {
-                   board[selectedSquare][0].stack = (token *)malloc(sizeof(token)); // allocates memory
-                   board[selectedSquare][0].stack->col = players[j].col;
-                   board[selectedSquare][0].stack->next = NULL;
-                   board[selectedSquare][0].numTokens++;
-                }
-
-            }
-
+                    printf("\nThis choice is not available.\n" );
+                    printf("Please select another square\n");
+                    scanf("%d", &selectedSquare); // takes input from user again
+            } // close outer while loop
+            
+            temp = (token *)malloc(sizeof(token)); // allocates memory
+            temp->col = players[j].col;
+            push(&board[selectedSquare][0].stack, temp);
+            board[selectedSquare][0].numTokens++;
 
             // to be implemented: if the square contains the min number of tokens and
             // does not have a token of the same colour of the player
 
 
             // updates the minimum number of Tokens
-            if(((numPlayers * i) + j + 1)%NUM_ROWS ==0)
+            if(((numPlayers * i) + j)%NUM_ROWS ==0)
                 minNumOfTokens++;
 
-            //print_board(board); // prints board after each token is placed
+            num_available_tokens = 0; // resets counter for next iteration
+
+
         }
     }
 
