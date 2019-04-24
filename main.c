@@ -35,7 +35,9 @@ int main(int argc, char** argv){
 
 
     //manages the turns of the game and identifies a winner
-    play_game(board, players, numPlayers);
+    int winner = play_game(board, players, numPlayers);
+
+    printf("Congratulations, you won the game %s", players[winner].name);
 
     return 0;
 }

@@ -71,55 +71,61 @@ void printLine(void){
  *        numPlayers - the number of players
  */
 void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers){
-// the min number of tokens placed on a square in the first coloumn of the board
+    // the min number of tokens placed on a square in the first coloumn of the board
     int minNumOfTokens = 0;
+    //the square selected by the user
     int selectedSquare = 0;
-    int num_available_tokens = 0;
+    //a temporary pointer to the token created once a valid input is received
     token *temp = NULL;
 
+    //print the board ahead of the first token being placed
     printf("\nThe current board:\n");
-    print_board(board); // prints board at start of place_tokens sequence
+    print_board(board); // prints board
 
+    //each player can place 4 tokens
     for(int i=0; i < 4; i++){
-
+        //iterate over all players
         for(int j=0; j <numPlayers; j++){
+            //request user input
+            printf("Please select a square in the first column %s?:", players[j].name);
+            scanf("%d", &selectedSquare); // user selects square in first column
 
-            printf("Please select a square in the first column %s", players[j].name);
-            scanf("%d", &selectedSquare); // user selects square in first coloumn
-
-            while(board[selectedSquare][0].numTokens > minNumOfTokens || selectedSquare < -1 || selectedSquare > 6 || (board[selectedSquare][0].stack != NULL && board[selectedSquare][0].stack->col == players[j].col) )
+            //check that the input is valid
+            /*the selected square cannot:
+                -have a stack higher than the shortest stack in column 0
+                -be outside of the range 0 - 5 (there are only 6 rows on the board)
+                -be one of the player's own tokens
+            */
+            while(board[selectedSquare][0].numTokens > minNumOfTokens || selectedSquare < -1 || selectedSquare > 6 || (board[selectedSquare][0].stack != NULL && board[selectedSquare][0].stack->col == players[j].col))
             {
-                printf("\nThis square is not available because:\n");
-                if(board[selectedSquare][0].numTokens > minNumOfTokens){
-                    printf("The stack is too high relative to the other squares.\n\n");
+                printf("This square is not available because ");
+                if(selectedSquare < -1 || selectedSquare > 6){
+                    printf("the given row number is outside of the accepted bounds (0 - 5)\n");
                 }
-                else if(selectedSquare < -1 || selectedSquare > 6){
-                    printf("You have chosen a value outside of the possible range.\n");
-                    printf("You must select a square between 0-5.\n\n");
+                else if(board[selectedSquare][0].numTokens > minNumOfTokens){
+                    printf("the stack is too high compared to the other stacks in column 0\n");
                 }
-                else{
-                    printf("The top token on this stack is your own token.\n\n");
+                else if((board[selectedSquare][0].stack != NULL && board[selectedSquare][0].stack->col == players[j].col)){
+                    printf("the top token on this stack is one of your own tokens\n");
                 }
-                printf("Please select another square\n");
+                printf("Please select another square\n?:");
                 scanf("%d", &selectedSquare); // takes input from user again
             } // close outer while loop
 
-            temp = (token *)malloc(sizeof(token)); // allocates memory
-            temp->col = players[j].col;//assign color of current player to the allocated token
-            push(&board[selectedSquare][0].stack, temp);//push the allocated token to the stack of the selected square
-            board[selectedSquare][0].numTokens++;//incrememnt the number of tokens on the selected square
+            //place the token on the board
+            temp = (token *)malloc(sizeof(token)); // allocates memory for token
+            temp->col = players[j].col;//assign player's color to token
+            push(&board[selectedSquare][0].stack, temp);//push token to top of selected stack
+            board[selectedSquare][0].numTokens++;//increment number of token on selected square
 
-            // to be implemented: if the square contains the min number of tokens and
-            // does not have a token of the same colour of the player
-
-
-            // updates the minimum number of Tokens
-            if(((numPlayers * i) + j + 1)%NUM_ROWS ==0)
+            // updates the minimum number of tokens
+            if(((numPlayers * i) + j + 1)%NUM_ROWS ==0){
                 minNumOfTokens++;
+            }
 
-            num_available_tokens = 0; // resets counter for next iteration
+            //print the board after every turn to show that the token has been placed
             printf("\nThe current board:\n");
-            print_board(board); // prints board after token has been placed
+            print_board(board); // prints board
         }
     }
 
@@ -141,39 +147,40 @@ void place_tokens(square board[NUM_ROWS][NUM_COLUMNS], player players[], int num
 int play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlayers){
     srand(time(NULL));//seed the random() function
 
-    //a number of counter variables
-    int userIndex = 0;//used to index the current user
+    int userIndex = 0;//int var used to index the current user
 
     //variables to store a variety of user inputs
     int row = 0;//store user input of row number
     int column = 0;//store user input of column number
     enum DIR direction = 0;//whether the user would like to move a token up/down (0 - up; 1 - down)
-    int choice;//used to store the user choice
+    int choice;//used to store the user choice at different stages in the program
 
-    //miscellaneous variables
     int diceRoll = 0;//used to store the result of the user's dice roll
 
-    //iterate over the players[] array until a player has 3 token in the last column
+    //iterate over the players[] array until a player has 3 tokens in the last column
     while(players[(userIndex-1) % numPlayers].numTokensLastCol != 3){
         //print user's name and indicate start of turn
         //note: that all user names are terminated by '\n\0'
         printf("It is your turn to play %s", players[userIndex].name);
-        while(getchar()!='\n');//clear input buffer
-        puts("Please roll the dice by pressing enter");//request user input
+        while(getchar()!='\n');//clear stdin buffer
+        printf("Please roll the dice by pressing enter\n?:");//request user input
         //wait for the user to hit enter
         while(getchar()!='\n');
-        //simulate a dice roll
+        //simulate a dice roll (between 0 and 5, the minimum and maximum row numbers)
         diceRoll = rand()%6;
         //print out the result of the dice roll
-        printf("You must move a token from row %d\n", diceRoll);
+        printf("You rolled a %d on the dice\nYou must move a token from row %d\n", diceRoll+1, diceRoll);
 
+        //ensure that the chosen row is not empty
         if(nonEmptySquaresInRow(board, diceRoll) == 0){
-            puts("No moves currently possible from this row because empty");
+            puts("No moves are currently possible from this row because the row is empty");
             //increment the userIndex
             ++userIndex;
             //perform the modulo operation on userIndex to ensure it remains within
             //the bounds of the players[] array (of length numPlayers)
             userIndex %= numPlayers;
+
+            //return to the start of the while loop
             continue;
         }
 
@@ -182,37 +189,50 @@ int play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlay
 
         puts("Would you like to move one of your tokens up/down?");//request user input
         puts("(1)Yes\n(0)No");
+        printf("?:");
         scanf("%d", &choice);//scan user input
 
-        //switch to handle user choice
+        //verify that input is valid
+        while(choice < 0 || choice > 1){
+            puts("That is not a valid choice");
+            puts("Would you like to move one of your tokens up/down?");//request user input
+            puts("(1)Yes\n(0)No");
+            printf("?:");
+            scanf("%d", &choice);//scan user input
+        }
+
+        //if the user would like to move one of their tokens up/down
         if(choice == 1){
             //request user input
-            puts("Please input the row and column number of the token you would like to move");
+            printf("Please input the row and column number of the token you would like to move\n?:");
             //scan in user input
             scanf("%d", &row);//scan in row index
             scanf("%d", &column);//scan in column index
+
             //ensure that this token belongs to the user and is not in an obstacle square nor an empty square
             //and that this token is not in the final column
             while(column >= 8 || column < 0 || board[row][column].stack == NULL || board[row][column].stack->col != players[userIndex].col || (board[row][column].type == OBSTACLE && !isPassable(board, row, column))){
                 puts("That square cannot be selected, please choose another");//error message
-                puts("Please input the row and column number of the token you would like to move");//request user input
+                printf("Please input the row and column number of the token you would like to move\n?:");//request user input
                 scanf("%d", &row);//scan in user input
                 scanf("%d", &column);//scan in user input
             }
+
             //request user input
-            puts("Would you like to move up or down?\n(1)Up\n(0)Down");
+            printf("Would you like to move up or down?\n(1)Up\n(0)Down\n?:");
             scanf("%d", &direction);//direction is of type enum DIR {UP, DOWN}
             //esnure 'direction' is within the allowed range of 0 - 1
             while(direction > 1 || direction < 0){
                 puts("That is not a recognised input");//error message
-                puts("Would you like to move up or down?\n(1)Up\n(0)Down");
+                printf("Would you like to move up or down?\n(1)Up\n(0)Down\n?:");
                 scanf("%d", &direction);
             }
+
             //switch statement to handle user input of direction
             switch(direction){
                 case DOWN:
                     //edge case handling (can't move down from row 5)
-                    if(row == 5){
+                    while(row == 5){
                         puts("You cannot move down from this row");
                         break;
                     }
@@ -235,6 +255,8 @@ int play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlay
             }
         }
 
+        //if the row is empty after the user has moved one of their tokens up/down
+        //then this turn must be skipped as no moves can be made
         if(nonEmptySquaresInRow(board, diceRoll) == 0){
             puts("No moves currently possible from this row because empty");
             //increment the userIndex
@@ -242,6 +264,8 @@ int play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlay
             //perform the modulo operation on userIndex to ensure it remains within
             //the bounds of the players[] array (of length numPlayers)
             userIndex %= numPlayers;
+
+            //return to top of while loop
             continue;
         }
 
@@ -249,38 +273,42 @@ int play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlay
         //the following code handles the mandatory component of the move
 
         //the user can move a token from any column in the row number that they rolled using the dice
-        puts("Please enter the column number of the token you would like to move");//request user input
+        printf("Please enter the column number of the token you would like to move in row %d\n?:", diceRoll);//request user input
         scanf("%d", &column);//scan in user input
         //the user cannot select an empty square or a square outside of rows 0 - 8
         while(column >= 8 || column < 0 ||  board[diceRoll][column].stack == NULL){
             puts("This column number is invalid, please try again");
-            puts("Please enter the column number of the token you would like to move");//request user input
+            printf("Please enter the column number of the token you would like to move in row %d\n?:", diceRoll);//request user input
             scanf("%d", &column);//scan in user input
         }
 
         //if there is only one occupied square on the row and that square is an obstacle
-        //square then no moves are possible
+        //square which cannot yet be passed then no moves are possible
         if(board[diceRoll][column].type == OBSTACLE && !isPassable(board, diceRoll,column) && nonEmptySquaresInRow(board, diceRoll) == 1){
-            puts("No moves currently possible from this row because empty");
+            puts("No moves currently possible from this row because it is empty");
+            puts("except for an obstacle square which cannot be passed");
             //increment the userIndex
             ++userIndex;
             //perform the modulo operation on userIndex to ensure it remains within
             //the bounds of the players[] array (of length numPlayers)
             userIndex %= numPlayers;
+
+            //return to top of loop
             continue;
         }
 
+        //if the user chooses an obstacle square, ensure that it can be passed
         if(board[diceRoll][column].type == OBSTACLE){
             //iterate over all squares behind this obstacle square, if any are non-empty
             //then this square cannot be passed. also confim selected square is not empty
             while(board[diceRoll][column].stack == NULL || (board[diceRoll][column].type == OBSTACLE && !isPassable(board, diceRoll, column))){
                 puts("This obstacle square cannot yet be passed");//error message
-                puts("Please enter the column number of the token you would like to move");//request user input
+                printf("Please enter the column number of the token you would like to move in row %d\n?:", diceRoll);//request user input
                 scanf("%d", &column);//scan user input
                 //check that the user has not selected an empty square
                 while(column >= 8 || column < 0 || board[diceRoll][column].stack == NULL){
                     puts("This square cannot be chosen, it is empty or out of bounds, please choose another");
-                    puts("Please enter the column number of the token you would like to move");//request user input
+                    printf("Please enter the column number of the token you would like to move in row %d\n?:", diceRoll);//request user input
                     scanf("%d", &column);//scan in user input
                 }
             }
@@ -290,7 +318,7 @@ int play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlay
         moveToken(board, diceRoll, column, diceRoll, column+1);
 
         //if the token moved is now in the final column, increment numTokensLastCol
-        if(column == 8){
+        if(column + 1 == 8){
             players[userIndex].numTokensLastCol++;
         }
 
@@ -302,6 +330,7 @@ int play_game(square board[NUM_ROWS][NUM_COLUMNS], player players[], int numPlay
         //the bounds of the players[] array (of length numPlayers)
         userIndex %= numPlayers;
     }
+    //return the index of the winning player
     return userIndex-1;
 }
 
