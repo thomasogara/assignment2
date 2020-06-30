@@ -1,4 +1,4 @@
-# Thomas O'Gara's Algorithms Portfolio
+# Igel Argern Implementation
 
 This project is an implementation of the popular board game Igel Argern. It is implemented in C, using no external libraries.
 
